@@ -1442,7 +1442,7 @@
     }
     
     /* ============================================
-       نافذة النسخ المنفصلة - بالشكل المطلوب (الإصلاح الجديد)
+       نافذة النسخ المنفصلة
        ============================================ */
     
     .copy-modal-overlay {
@@ -2416,6 +2416,13 @@
       activityStatusTimers: {}
     };
 
+    // ✅ نظام التحديث التلقائي الخفي
+    let autoUpdateInterval = null;
+    let lastUpdateCheck = 0;
+    const UPDATE_INTERVAL = 300; // 300 مللي ثانية - أسرع من نصف ثانية
+    let syncInProgress = false;
+    let lastServerUpdate = null;
+
     // ✅ عناصر DOM
     const mainScreen = document.getElementById('mainScreen');
     const leaderSection = document.getElementById('leaderSection');
@@ -2499,12 +2506,313 @@
       }
     ];
 
+    // ✅ نظام التحديث التلقائي الخفي
+    function initSilentAutoUpdate() {
+      console.log('بدء نظام التحديث التلقائي الخفي...');
+      
+      if (autoUpdateInterval) {
+        clearInterval(autoUpdateInterval);
+      }
+      
+      autoUpdateInterval = setInterval(async () => {
+        await performSilentUpdate();
+      }, UPDATE_INTERVAL);
+      
+      document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) {
+          setTimeout(performSilentUpdate, 100);
+        }
+      });
+      
+      window.addEventListener('online', () => {
+        setTimeout(performSilentUpdate, 200);
+      });
+    }
+
+    async function performSilentUpdate() {
+      if (syncInProgress || !state.isOnline) {
+        return;
+      }
+      
+      syncInProgress = true;
+      
+      try {
+        const hasUpdate = await quickUpdateCheck();
+        
+        if (hasUpdate) {
+          await fetchAndApplyUpdates();
+          silentUIUpdate();
+        }
+        
+        const now = Date.now();
+        if (now - lastUpdateCheck > 30000) {
+          await forceFullSync();
+          lastUpdateCheck = now;
+        }
+        
+      } catch (error) {
+        console.debug('تحديث خفي فشل:', error);
+      } finally {
+        syncInProgress = false;
+      }
+    }
+
+    async function quickUpdateCheck() {
+      try {
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/activities?select=id&limit=1`, {
+          headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${SUPABASE_KEY}`
+          },
+          signal: AbortSignal.timeout(1000)
+        });
+        
+        const totalCount = response.headers.get('content-range')?.split('/')[1];
+        
+        if (totalCount && parseInt(totalCount) !== state.activities.length) {
+          return true;
+        }
+        
+        const latestActivity = await getLatestActivityFromServer();
+        if (!latestActivity) return false;
+        
+        const localLatest = getLocalLatestActivity();
+        if (!localLatest) return true;
+        
+        return new Date(latestActivity.created_at) > new Date(localLatest.created_at);
+        
+      } catch (error) {
+        return false;
+      }
+    }
+
+    async function getLatestActivityFromServer() {
+      try {
+        const data = await supabaseFetch('activities?select=*&order=created_at.desc&limit=1');
+        return data && data.length > 0 ? data[0] : null;
+      } catch (error) {
+        return null;
+      }
+    }
+
+    function getLocalLatestActivity() {
+      if (state.activities.length === 0) return null;
+      
+      return state.activities.reduce((latest, current) => {
+        const latestTime = new Date(latest.created_at);
+        const currentTime = new Date(current.created_at);
+        return currentTime > latestTime ? current : latest;
+      });
+    }
+
+    async function fetchAndApplyUpdates() {
+      try {
+        const oneMinuteAgo = new Date(Date.now() - 60000).toISOString();
+        const query = `activities?select=*&order=created_at.desc&created_at=gt.${oneMinuteAgo}`;
+        
+        const newData = await supabaseFetch(query);
+        
+        if (!newData || newData.length === 0) {
+          return;
+        }
+        
+        mergeUpdatesSilently(newData);
+        
+      } catch (error) {
+        await fetchLast10Activities();
+      }
+    }
+
+    async function fetchLast10Activities() {
+      try {
+        const data = await supabaseFetch('activities?select=*&order=created_at.desc&limit=10');
+        
+        if (data && data.length > 0) {
+          mergeUpdatesSilently(data);
+        }
+      } catch (error) {
+        console.debug('فشل جلب آخر 10 أنشطة');
+      }
+    }
+
+    function mergeUpdatesSilently(newData) {
+      const newActivities = newData.map(item => ({
+        id: item.id.toString(),
+        type: item.type,
+        roomType: item.room_type,
+        title: item.title,
+        description: item.description,
+        startTime: item.start_time,
+        endTime: item.end_time,
+        link: item.link,
+        customMessage: item.custom_message,
+        date: new Date(item.created_at).toLocaleDateString('ar-AR'),
+        created_at: item.created_at
+      }));
+      
+      let hasChanges = false;
+      
+      newActivities.forEach(newActivity => {
+        const existingIndex = state.activities.findIndex(a => a.id === newActivity.id);
+        
+        if (existingIndex === -1) {
+          state.activities.unshift(newActivity);
+          hasChanges = true;
+        } else if (JSON.stringify(state.activities[existingIndex]) !== JSON.stringify(newActivity)) {
+          state.activities[existingIndex] = newActivity;
+          hasChanges = true;
+        }
+      });
+      
+      if (hasChanges) {
+        saveLocalBackup();
+        updateStats();
+        removeDuplicatesAndSort();
+      }
+    }
+
+    function removeDuplicatesAndSort() {
+      const uniqueIds = new Set();
+      state.activities = state.activities.filter(activity => {
+        if (uniqueIds.has(activity.id)) {
+          return false;
+        }
+        uniqueIds.add(activity.id);
+        return true;
+      }).sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    }
+
+    function silentUIUpdate() {
+      if (!leaderDashboard.classList.contains('hidden')) {
+        updateLeaderDashboardSilently();
+      } else if (!partnerSection.classList.contains('hidden')) {
+        updatePartnerSectionSilently();
+      }
+    }
+
+    function updateLeaderDashboardSilently() {
+      const currentList = document.querySelectorAll('.content-item');
+      
+      if (currentList.length !== state.activities.length) {
+        renderActivitiesForLeader();
+        return;
+      }
+      
+      state.activities.forEach((activity, index) => {
+        if (index < currentList.length) {
+          const item = currentList[index];
+          const titleElement = item.querySelector('.content-title');
+          const typeElement = item.querySelector('.activity-type');
+          
+          if (titleElement && titleElement.textContent !== activity.title) {
+            titleElement.textContent = activity.title;
+          }
+          
+          if (typeElement) {
+            const typeText = getTypeText(activity.type);
+            if (typeElement.textContent !== typeText) {
+              typeElement.textContent = typeText;
+            }
+          }
+        }
+      });
+    }
+
+    function updatePartnerSectionSilently() {
+      const currentCards = document.querySelectorAll('.activity-card');
+      
+      if (currentCards.length !== state.activities.filter(a => 
+        state.selectedFilterType === 'all' || a.type === state.selectedFilterType).length) {
+        renderActivitiesForPartners();
+        return;
+      }
+      
+      state.activities.forEach((activity, index) => {
+        if (index < currentCards.length) {
+          const card = currentCards[index];
+          const titleElement = card.querySelector('.activity-title');
+          const typeElement = card.querySelector('.activity-type');
+          const roomElement = card.querySelector('.room-type');
+          
+          if (titleElement && titleElement.textContent !== activity.title) {
+            titleElement.textContent = activity.title;
+          }
+          
+          if (typeElement) {
+            const typeText = getTypeText(activity.type);
+            if (typeElement.textContent !== typeText) {
+              typeElement.textContent = typeText;
+            }
+          }
+          
+          if (roomElement) {
+            const roomText = getRoomTypeText(activity.roomType);
+            if (roomElement.textContent !== roomText) {
+              roomElement.textContent = roomText;
+              roomElement.className = `room-type room-${activity.roomType}`;
+            }
+          }
+        }
+      });
+    }
+
+    async function forceFullSync() {
+      if (!state.isOnline) return;
+      
+      try {
+        const data = await supabaseFetch('activities?select=*&order=created_at.desc');
+        
+        if (data && data.length > 0) {
+          const newActivities = data.map(item => ({
+            id: item.id.toString(),
+            type: item.type,
+            roomType: item.room_type,
+            title: item.title,
+            description: item.description,
+            startTime: item.start_time,
+            endTime: item.end_time,
+            link: item.link,
+            customMessage: item.custom_message,
+            date: new Date(item.created_at).toLocaleDateString('ar-AR'),
+            created_at: item.created_at
+          }));
+          
+          if (JSON.stringify(state.activities) !== JSON.stringify(newActivities)) {
+            state.activities = newActivities;
+            saveLocalBackup();
+            updateStats();
+            silentUIUpdate();
+          }
+        }
+      } catch (error) {
+        // لا تفعل شيئاً
+      }
+    }
+
+    function onPageChange() {
+      setTimeout(() => {
+        if (!syncInProgress && state.isOnline) {
+          silentUIUpdate();
+        }
+      }, 50);
+    }
+
+    function stopSilentUpdate() {
+      if (autoUpdateInterval) {
+        clearInterval(autoUpdateInterval);
+        autoUpdateInterval = null;
+      }
+      syncInProgress = false;
+    }
+
     // ✅ 1. نظام مراقبة الاتصال
     function initConnectionMonitoring() {
-      console.log('بدء مراقبة حالة الاتصال...');
+      console.log('بدء مراقبة حالة الاتصال مع التحديث الخفي...');
       
       state.isOnline = navigator.onLine;
       updateConnectionStatus();
+      
+      initSilentAutoUpdate();
       
       window.addEventListener('online', handleConnectionChange);
       window.addEventListener('offline', handleConnectionChange);
@@ -2520,8 +2828,13 @@
       
       if (!state.isOnline && wasOnline) {
         showOfflinePage();
+        stopSilentUpdate();
       } else if (state.isOnline && !wasOnline) {
         hideOfflinePage();
+        setTimeout(() => {
+          initSilentAutoUpdate();
+          performSilentUpdate();
+        }, 500);
       }
       
       updateConnectionStatus();
@@ -2710,51 +3023,40 @@
       try {
         state.isLoading = true;
         
-        if (refreshBtn) {
-          const originalHTML = refreshBtn.innerHTML;
-          refreshBtn.innerHTML = '<span class="loading"></span> جاري التحميل...';
-          refreshBtn.disabled = true;
-        }
+        await performSilentUpdate();
         
-        updateStats();
-        renderActivitiesForLeader();
-        renderActivitiesForPartners();
+        setTimeout(async () => {
+          try {
+            const data = await supabaseFetch('activities?select=*&order=created_at.desc&limit=20');
+            
+            if (data && data.length > 0) {
+              state.activities = data.map(item => ({
+                id: item.id.toString(),
+                type: item.type,
+                roomType: item.room_type,
+                title: item.title,
+                description: item.description,
+                startTime: item.start_time,
+                endTime: item.end_time,
+                link: item.link,
+                customMessage: item.custom_message,
+                date: new Date(item.created_at).toLocaleDateString('ar-AR'),
+                created_at: item.created_at
+              }));
+              
+              saveLocalBackup();
+              updateStats();
+              silentUIUpdate();
+            }
+          } catch (error) {
+            // لا تظهر رسائل للمستخدم
+          }
+        }, 1000);
         
-        const data = await supabaseFetch('activities?select=*&order=created_at.desc');
-        
-        if (data && data.length > 0) {
-          state.activities = data.map(item => ({
-            id: item.id.toString(),
-            type: item.type,
-            roomType: item.room_type,
-            title: item.title,
-            description: item.description,
-            startTime: item.start_time,
-            endTime: item.end_time,
-            link: item.link,
-            customMessage: item.custom_message,
-            date: new Date(item.created_at).toLocaleDateString('ar-AR'),
-            created_at: item.created_at
-          }));
-          
-          saveLocalBackup();
-          
-          updateStats();
-          renderActivitiesForLeader();
-          renderActivitiesForPartners();
-          
-          showNotification('تم تحديث البيانات بنجاح', 'success');
-        }
       } catch (error) {
-        console.error('خطأ في loadData:', error);
         useLocalData();
       } finally {
         state.isLoading = false;
-        
-        if (refreshBtn) {
-          refreshBtn.innerHTML = '<i class="fas fa-sync-alt"></i> تحديث';
-          refreshBtn.disabled = false;
-        }
       }
     }
     
@@ -3222,8 +3524,25 @@
 
     // ✅ 12. تحديث الأنشطة
     async function refreshActivities() {
-      await loadData();
-      showNotification('تم تحديث قائمة الأنشطة');
+      if (state.isLoading || syncInProgress) return;
+      
+      try {
+        await forceFullSync();
+        
+        if (Math.random() > 0.5) {
+          const tempBtn = refreshBtn;
+          if (tempBtn) {
+            const original = tempBtn.innerHTML;
+            tempBtn.innerHTML = '<i class="fas fa-check"></i>';
+            setTimeout(() => {
+              tempBtn.innerHTML = original;
+            }, 300);
+          }
+        }
+        
+      } catch (error) {
+        // لا تظهر رسائل للمستخدم
+      }
     }
 
     // ✅ 13. الحصول على نص النوع
@@ -3343,7 +3662,7 @@
       totalActivitiesElement.textContent = total;
     }
 
-    // ✅ نافذة النسخ الجديدة - الإصلاح
+    // ✅ نافذة النسخ
     function showCopyModalForPartner(activityId) {
       const activity = state.activities.find(a => a.id === activityId);
       if (!activity) return;
@@ -3362,14 +3681,12 @@
       
       copyModal.classList.remove('hidden');
       
-      // ✅ إصلاح: تأكد من أن الأزرار تظهر دائمًا
       setTimeout(() => {
         const container = document.querySelector('.copy-modal-container');
         const content = document.querySelector('.copy-modal-content');
         const buttons = document.querySelector('.copy-buttons-container');
         
         if (container && content && buttons) {
-          // إعادة حساب الأبعاد لضمان ظهور الأزرار
           container.style.display = 'flex';
           container.style.flexDirection = 'column';
           content.style.flex = '1';
@@ -3398,14 +3715,12 @@
       
       copyModal.classList.remove('hidden');
       
-      // ✅ إصلاح: تأكد من أن الأزرار تظهر دائمًا
       setTimeout(() => {
         const container = document.querySelector('.copy-modal-container');
         const content = document.querySelector('.copy-modal-content');
         const buttons = document.querySelector('.copy-buttons-container');
         
         if (container && content && buttons) {
-          // إعادة حساب الأبعاد لضمان ظهور الأزرار
           container.style.display = 'flex';
           container.style.flexDirection = 'column';
           content.style.flex = '1';
@@ -3484,7 +3799,7 @@
       document.body.removeChild(textArea);
     }
 
-    // ✅ بقية الدوال الأساسية
+    // ✅ دوال التنقل
     function showLeaderLogin() {
       mainScreen.classList.add('hidden');
       partnerSection.classList.add('hidden');
@@ -3494,19 +3809,28 @@
       
       document.getElementById('accessCode').value = '';
       codeStatus.classList.add('hidden');
+      
+      onPageChange();
     }
 
     function showPartnerSection() {
       mainScreen.classList.add('hidden');
       leaderSection.classList.add('hidden');
       partnerSection.classList.remove('hidden');
-      renderActivitiesForPartners();
+      
+      setTimeout(() => {
+        renderActivitiesForPartners();
+      }, 100);
+      
+      onPageChange();
     }
 
     function showMain() {
       mainScreen.classList.remove('hidden');
       leaderSection.classList.add('hidden');
       partnerSection.classList.add('hidden');
+      
+      onPageChange();
     }
 
     function checkAccessCode() {
@@ -3722,7 +4046,7 @@
 
     // ✅ التهيئة الأولية
     document.addEventListener('DOMContentLoaded', function() {
-      console.log('بدء تشغيل التطبيق...');
+      console.log('بدء تشغيل التطبيق مع التحديث الخفي...');
       
       initConnectionMonitoring();
       loadData();
@@ -3743,10 +4067,11 @@
       }
       
       if (!state.isOnline) {
-        console.log('لا يوجد اتصال بالإنترنت عند بدء التشغيل');
         showOfflinePage();
       }
     });
   </script>
 </body>
 </html>
+    
+
