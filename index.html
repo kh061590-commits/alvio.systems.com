@@ -1441,10 +1441,7 @@
       border: 1px solid rgba(255, 107, 107, 0.2);
     }
     
-    /* ============================================
-       نافذة النسخ المنفصلة
-       ============================================ */
-    
+    /* نافذة النسخ المنفصلة */
     .copy-modal-overlay {
       position: fixed;
       top: 0;
@@ -1627,6 +1624,147 @@
       background: #ffa500;
       transform: translateY(-2px);
       box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+    
+    /* نافذة تأكيد الحذف */
+    .confirm-delete-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.85);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      backdrop-filter: blur(10px);
+      animation: fadeIn 0.3s ease;
+    }
+    
+    .confirm-delete-container {
+      background: linear-gradient(135deg, #2d2d2d, #1a1a1a);
+      border-radius: 20px;
+      width: 90%;
+      max-width: 450px;
+      overflow: hidden;
+      box-shadow: 
+        0 20px 50px rgba(0, 0, 0, 0.5),
+        0 0 0 1px rgba(255, 69, 0, 0.2);
+      border: 2px solid #ff4500;
+      animation: scaleIn 0.3s ease;
+    }
+    
+    .confirm-delete-header {
+      background: linear-gradient(135deg, #ff4500, #ff8c00);
+      padding: 25px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .confirm-delete-header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(45deg, 
+        rgba(255, 255, 255, 0.2) 0%, 
+        transparent 50%, 
+        rgba(255, 255, 255, 0.2) 100%);
+    }
+    
+    .confirm-delete-icon {
+      font-size: 3.5rem;
+      margin-bottom: 15px;
+      color: white;
+      text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+      animation: pulse 1.5s infinite;
+    }
+    
+    .confirm-delete-header h3 {
+      color: white;
+      font-size: 1.5rem;
+      margin: 0;
+      font-weight: 800;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    }
+    
+    .confirm-delete-content {
+      padding: 25px;
+    }
+    
+    .confirm-delete-content p {
+      color: white;
+      font-size: 1rem;
+      margin-bottom: 15px;
+      text-align: center;
+      line-height: 1.5;
+    }
+    
+    .delete-warning {
+      color: #ffcc00 !important;
+      font-size: 1.1rem !important;
+      background: rgba(255, 204, 0, 0.1);
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 204, 0, 0.3);
+    }
+    
+    .delete-activity-info {
+      background: rgba(255, 69, 0, 0.1);
+      padding: 15px;
+      border-radius: 12px;
+      margin-top: 15px;
+      border: 1px solid rgba(255, 69, 0, 0.2);
+    }
+    
+    .delete-activity-info h4 {
+      color: #ff8c00;
+      margin-bottom: 10px;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .delete-activity-info p {
+      color: #ddd;
+      text-align: right;
+      margin-bottom: 5px;
+      font-size: 0.9rem;
+    }
+    
+    .confirm-delete-footer {
+      padding: 20px 25px;
+      background: rgba(0, 0, 0, 0.3);
+      display: flex;
+      gap: 12px;
+      flex-direction: column;
+    }
+    
+    .confirm-delete-footer .btn {
+      width: 100%;
+      padding: 14px;
+      font-size: 1rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    
+    .confirm-delete-footer .btn-danger {
+      background: linear-gradient(135deg, #ff4500, #ff0000);
+      border: none;
+    }
+    
+    .confirm-delete-footer .btn-danger:hover {
+      background: linear-gradient(135deg, #ff0000, #ff4500);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(255, 0, 0, 0.3);
     }
     
     /* تحسينات للجوال */
@@ -1860,7 +1998,32 @@
         font-size: 1rem;
       }
       
-      /* نافذة النسخ على الجوال */
+      .confirm-delete-container {
+        width: 95%;
+        max-width: 400px;
+      }
+      
+      .confirm-delete-header {
+        padding: 20px;
+      }
+      
+      .confirm-delete-icon {
+        font-size: 2.8rem;
+      }
+      
+      .confirm-delete-header h3 {
+        font-size: 1.3rem;
+      }
+      
+      .confirm-delete-content {
+        padding: 20px;
+      }
+      
+      .confirm-delete-footer {
+        padding: 15px 20px;
+        flex-direction: column;
+      }
+      
       .copy-modal-container {
         width: 95%;
         max-height: 80vh;
@@ -1942,7 +2105,19 @@
         padding-right: 25px;
       }
       
-      /* نافذة النسخ على الجوال الصغير */
+      .confirm-delete-container {
+        width: 100%;
+        max-width: 100%;
+        border-radius: 0;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+      
+      .confirm-delete-content {
+        flex: 1;
+      }
+      
       .copy-modal-container {
         width: 100%;
         height: 100%;
@@ -2005,7 +2180,37 @@
     </div>
   </div>
 
-  <!-- نافذة نسخ الرسالة المخصصة - منفصلة -->
+  <!-- نافذة تأكيد الحذف -->
+  <div class="confirm-delete-modal hidden" id="confirmDeleteModal">
+    <div class="confirm-delete-container">
+      <div class="confirm-delete-header">
+        <div class="confirm-delete-icon">
+          <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <h3>تأكيد الحذف</h3>
+      </div>
+      
+      <div class="confirm-delete-content">
+        <p id="deleteConfirmMessage">هل أنت متأكد من حذف هذا النشاط؟</p>
+        <p class="delete-warning">⚠️ <strong>هذا الإجراء لا يمكن التراجع عنه!</strong></p>
+        
+        <div class="delete-activity-info" id="deleteActivityInfo">
+          <!-- سيتم تعبئته بالبيانات -->
+        </div>
+      </div>
+      
+      <div class="confirm-delete-footer">
+        <button class="btn btn-danger" id="confirmDeleteBtn">
+          <i class="fas fa-trash"></i> نعم، احذف النشاط
+        </button>
+        <button class="btn btn-outline" onclick="closeDeleteModal()">
+          <i class="fas fa-times"></i> إلغاء
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- نافذة النسخ المنفصلة -->
   <div class="copy-modal-overlay hidden" id="copyModal">
     <div class="copy-modal-container">
       <div class="copy-modal-header">
@@ -2389,7 +2594,7 @@
   </div>
 
   <footer>
-    <p>© 2025 تطبيق إدارة الأنشطة التدريبية. جميع الحقوق محفوظة.</p>
+    <p>© 2026 تطبيق إدارة الأنشطة التدريبية. جميع الحقوق محفوظة.</p>
   </footer>
 
   <script>
@@ -2413,15 +2618,144 @@
       maxReconnectAttempts: 10,
       connectionCheckInterval: null,
       reconnectInterval: null,
-      activityStatusTimers: {}
+      activityStatusTimers: {},
+      lastUpdateTime: null,
+      autoRefreshInterval: null,
+      soundEnabled: true
     };
 
-    // ✅ نظام التحديث التلقائي الخفي
-    let autoUpdateInterval = null;
-    let lastUpdateCheck = 0;
-    const UPDATE_INTERVAL = 300; // 300 مللي ثانية - أسرع من نصف ثانية
-    let syncInProgress = false;
-    let lastServerUpdate = null;
+    // ✅ أنظمة الأصوات
+    const soundSystem = {
+      playAddSound: function() {
+        if (!state.soundEnabled) return;
+        
+        try {
+          const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+          const oscillator = audioContext.createOscillator();
+          const gainNode = audioContext.createGain();
+          
+          oscillator.connect(gainNode);
+          gainNode.connect(audioContext.destination);
+          
+          oscillator.frequency.value = 800;
+          oscillator.type = 'sine';
+          
+          gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+          gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+          
+          oscillator.start(audioContext.currentTime);
+          oscillator.stop(audioContext.currentTime + 0.2);
+        } catch (error) {
+          console.log('⚠️ لا يمكن تشغيل صوت الإضافة:', error);
+        }
+      },
+      
+      playDeleteSound: function() {
+        if (!state.soundEnabled) return;
+        
+        try {
+          const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+          const oscillator = audioContext.createOscillator();
+          const gainNode = audioContext.createGain();
+          
+          oscillator.connect(gainNode);
+          gainNode.connect(audioContext.destination);
+          
+          oscillator.frequency.setValueAtTime(600, audioContext.currentTime);
+          oscillator.frequency.exponentialRampToValueAtTime(300, audioContext.currentTime + 0.4);
+          
+          oscillator.type = 'sawtooth';
+          
+          gainNode.gain.setValueAtTime(0.15, audioContext.currentTime);
+          gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.4);
+          
+          oscillator.start(audioContext.currentTime);
+          oscillator.stop(audioContext.currentTime + 0.4);
+        } catch (error) {
+          console.log('⚠️ لا يمكن تشغيل صوت الحذف:', error);
+        }
+      },
+      
+      playUpdateSound: function() {
+        if (!state.soundEnabled) return;
+        
+        try {
+          const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+          
+          for (let i = 0; i < 2; i++) {
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = 700 + (i * 100);
+            oscillator.type = 'triangle';
+            
+            gainNode.gain.setValueAtTime(0.08, audioContext.currentTime + (i * 0.1));
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.15 + (i * 0.1));
+            
+            oscillator.start(audioContext.currentTime + (i * 0.1));
+            oscillator.stop(audioContext.currentTime + 0.15 + (i * 0.1));
+          }
+        } catch (error) {
+          console.log('⚠️ لا يمكن تشغيل صوت التحديث:', error);
+        }
+      },
+      
+      playSuccessSound: function() {
+        if (!state.soundEnabled) return;
+        
+        try {
+          const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+          const oscillator = audioContext.createOscillator();
+          const gainNode = audioContext.createGain();
+          
+          oscillator.connect(gainNode);
+          gainNode.connect(audioContext.destination);
+          
+          oscillator.frequency.setValueAtTime(500, audioContext.currentTime);
+          oscillator.frequency.exponentialRampToValueAtTime(1000, audioContext.currentTime + 0.3);
+          
+          oscillator.type = 'sine';
+          
+          gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+          gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.3);
+          
+          oscillator.start(audioContext.currentTime);
+          oscillator.stop(audioContext.currentTime + 0.3);
+        } catch (error) {
+          console.log('⚠️ لا يمكن تشغيل صوت النجاح:', error);
+        }
+      },
+      
+      playErrorSound: function() {
+        if (!state.soundEnabled) return;
+        
+        try {
+          const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+          
+          for (let i = 0; i < 3; i++) {
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = 400;
+            oscillator.type = 'square';
+            
+            gainNode.gain.setValueAtTime(0.12, audioContext.currentTime + (i * 0.15));
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.1 + (i * 0.15));
+            
+            oscillator.start(audioContext.currentTime + (i * 0.15));
+            oscillator.stop(audioContext.currentTime + 0.1 + (i * 0.15));
+          }
+        } catch (error) {
+          console.log('⚠️ لا يمكن تشغيل صوت الخطأ:', error);
+        }
+      }
+    };
 
     // ✅ عناصر DOM
     const mainScreen = document.getElementById('mainScreen');
@@ -2469,10 +2803,16 @@
     const selectedFilterTypeText = document.getElementById('selectedFilterTypeText');
     const filterSelectInput = document.getElementById('filterSelect');
     
-    // ✅ عناصر نافذة النسخ الجديدة
+    // ✅ عناصر نافذة النسخ
     const copyModal = document.getElementById('copyModal');
     const copyMessagePreview = document.getElementById('copyMessagePreview');
     const copyLinkPreview = document.getElementById('copyLinkPreview');
+    
+    // ✅ عناصر نافذة تأكيد الحذف
+    const confirmDeleteModal = document.getElementById('confirmDeleteModal');
+    const deleteConfirmMessage = document.getElementById('deleteConfirmMessage');
+    const deleteActivityInfo = document.getElementById('deleteActivityInfo');
+    const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
 
     // ✅ أنواع الأنشطة
     const activityTypes = [
@@ -2506,319 +2846,74 @@
       }
     ];
 
-    // ✅ نظام التحديث التلقائي الخفي
-    function initSilentAutoUpdate() {
-      console.log('بدء نظام التحديث التلقائي الخفي...');
-      
-      if (autoUpdateInterval) {
-        clearInterval(autoUpdateInterval);
-      }
-      
-      autoUpdateInterval = setInterval(async () => {
-        await performSilentUpdate();
-      }, UPDATE_INTERVAL);
-      
-      document.addEventListener('visibilitychange', () => {
-        if (!document.hidden) {
-          setTimeout(performSilentUpdate, 100);
-        }
-      });
-      
-      window.addEventListener('online', () => {
-        setTimeout(performSilentUpdate, 200);
-      });
-    }
+    // ✅ متغيرات نافذة التأكيد
+    let deleteActivityId = null;
+    let deleteActivityData = null;
 
-    async function performSilentUpdate() {
-      if (syncInProgress || !state.isOnline) {
-        return;
-      }
-      
-      syncInProgress = true;
-      
-      try {
-        const hasUpdate = await quickUpdateCheck();
-        
-        if (hasUpdate) {
-          await fetchAndApplyUpdates();
-          silentUIUpdate();
-        }
-        
-        const now = Date.now();
-        if (now - lastUpdateCheck > 30000) {
-          await forceFullSync();
-          lastUpdateCheck = now;
-        }
-        
-      } catch (error) {
-        console.debug('تحديث خفي فشل:', error);
-      } finally {
-        syncInProgress = false;
-      }
-    }
-
-    async function quickUpdateCheck() {
-      try {
-        const response = await fetch(`${SUPABASE_URL}/rest/v1/activities?select=id&limit=1`, {
-          headers: {
-            'apikey': SUPABASE_KEY,
-            'Authorization': `Bearer ${SUPABASE_KEY}`
-          },
-          signal: AbortSignal.timeout(1000)
-        });
-        
-        const totalCount = response.headers.get('content-range')?.split('/')[1];
-        
-        if (totalCount && parseInt(totalCount) !== state.activities.length) {
-          return true;
-        }
-        
-        const latestActivity = await getLatestActivityFromServer();
-        if (!latestActivity) return false;
-        
-        const localLatest = getLocalLatestActivity();
-        if (!localLatest) return true;
-        
-        return new Date(latestActivity.created_at) > new Date(localLatest.created_at);
-        
-      } catch (error) {
-        return false;
-      }
-    }
-
-    async function getLatestActivityFromServer() {
-      try {
-        const data = await supabaseFetch('activities?select=*&order=created_at.desc&limit=1');
-        return data && data.length > 0 ? data[0] : null;
-      } catch (error) {
-        return null;
-      }
-    }
-
-    function getLocalLatestActivity() {
-      if (state.activities.length === 0) return null;
-      
-      return state.activities.reduce((latest, current) => {
-        const latestTime = new Date(latest.created_at);
-        const currentTime = new Date(current.created_at);
-        return currentTime > latestTime ? current : latest;
-      });
-    }
-
-    async function fetchAndApplyUpdates() {
-      try {
-        const oneMinuteAgo = new Date(Date.now() - 60000).toISOString();
-        const query = `activities?select=*&order=created_at.desc&created_at=gt.${oneMinuteAgo}`;
-        
-        const newData = await supabaseFetch(query);
-        
-        if (!newData || newData.length === 0) {
-          return;
-        }
-        
-        mergeUpdatesSilently(newData);
-        
-      } catch (error) {
-        await fetchLast10Activities();
-      }
-    }
-
-    async function fetchLast10Activities() {
-      try {
-        const data = await supabaseFetch('activities?select=*&order=created_at.desc&limit=10');
-        
-        if (data && data.length > 0) {
-          mergeUpdatesSilently(data);
-        }
-      } catch (error) {
-        console.debug('فشل جلب آخر 10 أنشطة');
-      }
-    }
-
-    function mergeUpdatesSilently(newData) {
-      const newActivities = newData.map(item => ({
-        id: item.id.toString(),
-        type: item.type,
-        roomType: item.room_type,
-        title: item.title,
-        description: item.description,
-        startTime: item.start_time,
-        endTime: item.end_time,
-        link: item.link,
-        customMessage: item.custom_message,
-        date: new Date(item.created_at).toLocaleDateString('ar-AR'),
-        created_at: item.created_at
-      }));
-      
-      let hasChanges = false;
-      
-      newActivities.forEach(newActivity => {
-        const existingIndex = state.activities.findIndex(a => a.id === newActivity.id);
-        
-        if (existingIndex === -1) {
-          state.activities.unshift(newActivity);
-          hasChanges = true;
-        } else if (JSON.stringify(state.activities[existingIndex]) !== JSON.stringify(newActivity)) {
-          state.activities[existingIndex] = newActivity;
-          hasChanges = true;
-        }
-      });
-      
-      if (hasChanges) {
-        saveLocalBackup();
-        updateStats();
-        removeDuplicatesAndSort();
-      }
-    }
-
-    function removeDuplicatesAndSort() {
-      const uniqueIds = new Set();
-      state.activities = state.activities.filter(activity => {
-        if (uniqueIds.has(activity.id)) {
-          return false;
-        }
-        uniqueIds.add(activity.id);
-        return true;
-      }).sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-    }
-
-    function silentUIUpdate() {
-      if (!leaderDashboard.classList.contains('hidden')) {
-        updateLeaderDashboardSilently();
-      } else if (!partnerSection.classList.contains('hidden')) {
-        updatePartnerSectionSilently();
-      }
-    }
-
-    function updateLeaderDashboardSilently() {
-      const currentList = document.querySelectorAll('.content-item');
-      
-      if (currentList.length !== state.activities.length) {
-        renderActivitiesForLeader();
-        return;
-      }
-      
-      state.activities.forEach((activity, index) => {
-        if (index < currentList.length) {
-          const item = currentList[index];
-          const titleElement = item.querySelector('.content-title');
-          const typeElement = item.querySelector('.activity-type');
-          
-          if (titleElement && titleElement.textContent !== activity.title) {
-            titleElement.textContent = activity.title;
-          }
-          
-          if (typeElement) {
-            const typeText = getTypeText(activity.type);
-            if (typeElement.textContent !== typeText) {
-              typeElement.textContent = typeText;
-            }
-          }
-        }
-      });
-    }
-
-    function updatePartnerSectionSilently() {
-      const currentCards = document.querySelectorAll('.activity-card');
-      
-      if (currentCards.length !== state.activities.filter(a => 
-        state.selectedFilterType === 'all' || a.type === state.selectedFilterType).length) {
-        renderActivitiesForPartners();
-        return;
-      }
-      
-      state.activities.forEach((activity, index) => {
-        if (index < currentCards.length) {
-          const card = currentCards[index];
-          const titleElement = card.querySelector('.activity-title');
-          const typeElement = card.querySelector('.activity-type');
-          const roomElement = card.querySelector('.room-type');
-          
-          if (titleElement && titleElement.textContent !== activity.title) {
-            titleElement.textContent = activity.title;
-          }
-          
-          if (typeElement) {
-            const typeText = getTypeText(activity.type);
-            if (typeElement.textContent !== typeText) {
-              typeElement.textContent = typeText;
-            }
-          }
-          
-          if (roomElement) {
-            const roomText = getRoomTypeText(activity.roomType);
-            if (roomElement.textContent !== roomText) {
-              roomElement.textContent = roomText;
-              roomElement.className = `room-type room-${activity.roomType}`;
-            }
-          }
-        }
-      });
-    }
-
-    async function forceFullSync() {
-      if (!state.isOnline) return;
-      
-      try {
-        const data = await supabaseFetch('activities?select=*&order=created_at.desc');
-        
-        if (data && data.length > 0) {
-          const newActivities = data.map(item => ({
-            id: item.id.toString(),
-            type: item.type,
-            roomType: item.room_type,
-            title: item.title,
-            description: item.description,
-            startTime: item.start_time,
-            endTime: item.end_time,
-            link: item.link,
-            customMessage: item.custom_message,
-            date: new Date(item.created_at).toLocaleDateString('ar-AR'),
-            created_at: item.created_at
-          }));
-          
-          if (JSON.stringify(state.activities) !== JSON.stringify(newActivities)) {
-            state.activities = newActivities;
-            saveLocalBackup();
-            updateStats();
-            silentUIUpdate();
-          }
-        }
-      } catch (error) {
-        // لا تفعل شيئاً
-      }
-    }
-
-    function onPageChange() {
-      setTimeout(() => {
-        if (!syncInProgress && state.isOnline) {
-          silentUIUpdate();
-        }
-      }, 50);
-    }
-
-    function stopSilentUpdate() {
-      if (autoUpdateInterval) {
-        clearInterval(autoUpdateInterval);
-        autoUpdateInterval = null;
-      }
-      syncInProgress = false;
-    }
-
-    // ✅ 1. نظام مراقبة الاتصال
+    // ✅ 1. نظام مراقبة الاتصال والتحديث التلقائي
     function initConnectionMonitoring() {
-      console.log('بدء مراقبة حالة الاتصال مع التحديث الخفي...');
+      console.log('بدء مراقبة حالة الاتصال...');
       
       state.isOnline = navigator.onLine;
       updateConnectionStatus();
       
-      initSilentAutoUpdate();
-      
       window.addEventListener('online', handleConnectionChange);
       window.addEventListener('offline', handleConnectionChange);
       
-      state.connectionCheckInterval = setInterval(checkConnection, 3000);
+      state.connectionCheckInterval = setInterval(checkConnection, 5000);
       checkConnection();
+      
+      startAutoRefresh();
+      
+      // ✅ بدء نظام المزامنة المتقدمة
+      startAutoRefresh();
+      
+      // ✅ فحص أولي للمزامنة
+      setTimeout(() => {
+        checkAndSyncDeletions();
+      }, 2000);
+    }
+    
+    function startAutoRefresh() {
+      if (state.autoRefreshInterval) {
+        clearInterval(state.autoRefreshInterval);
+      }
+      
+      state.autoRefreshInterval = setInterval(async () => {
+        if (state.isOnline && !state.isLoading) {
+          await checkForUpdates();
+          
+          // ✅ فحص خاص للمزامنة بعد الحذف
+          await checkAndSyncDeletions();
+        }
+      }, 5000);
+    }
+    
+    async function checkForUpdates() {
+      try {
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/activities?select=id,created_at&order=created_at.desc&limit=10`, {
+          headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${SUPABASE_KEY}`
+          },
+          signal: AbortSignal.timeout(2000)
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          if (data && data.length > 0) {
+            const latestUpdate = new Date(data[0].created_at);
+            
+            if (!state.lastUpdateTime || latestUpdate > state.lastUpdateTime) {
+              console.log('تم اكتشاف تحديثات جديدة، جاري التحديث...');
+              await loadData();
+              state.lastUpdateTime = latestUpdate;
+            }
+          }
+        }
+      } catch (error) {
+        console.log('تحديث تلقائي:', error.message);
+      }
     }
     
     function handleConnectionChange() {
@@ -2828,13 +2923,8 @@
       
       if (!state.isOnline && wasOnline) {
         showOfflinePage();
-        stopSilentUpdate();
       } else if (state.isOnline && !wasOnline) {
         hideOfflinePage();
-        setTimeout(() => {
-          initSilentAutoUpdate();
-          performSilentUpdate();
-        }, 500);
       }
       
       updateConnectionStatus();
@@ -2857,7 +2947,9 @@
     function updateConnectionStatus() {
       if (connectionStatus) {
         if (state.isOnline) {
-          connectionStatus.innerHTML = '✅ الاتصال نشط';
+          const now = new Date();
+          const timeStr = now.toLocaleTimeString('ar-AR', { hour: '2-digit', minute: '2-digit' });
+          connectionStatus.innerHTML = `✅ الاتصال نشط - آخر تحديث: ${timeStr}`;
           connectionStatus.style.color = '#27ae60';
         } else {
           connectionStatus.innerHTML = '📡 جاري محاولة الاتصال تلقائيًا...';
@@ -2877,6 +2969,11 @@
       hideAllModals();
       closeMeetWindow();
       
+      if (state.autoRefreshInterval) {
+        clearInterval(state.autoRefreshInterval);
+        state.autoRefreshInterval = null;
+      }
+      
       startReconnectionAttempts();
     }
     
@@ -2892,6 +2989,8 @@
       
       showMain();
       loadData();
+      
+      startAutoRefresh();
       
       showNotification('تم استعادة الاتصال بالإنترنت بنجاح', 'success');
     }
@@ -2939,6 +3038,7 @@
       activityTypeModal.classList.add('hidden');
       filterActivityTypeModal.classList.add('hidden');
       copyModal.classList.add('hidden');
+      confirmDeleteModal.classList.add('hidden');
     }
 
     // ✅ 2. دالة للتواصل مع Supabase
@@ -2955,7 +3055,7 @@
         const timeoutPromise = new Promise((_, rejectTimeout) => {
           state.timeoutId = setTimeout(() => {
             rejectTimeout(new Error('انتهت مهلة الاتصال'));
-          }, 3000);
+          }, 5000);
         });
         
         const fetchPromise = (async () => {
@@ -2970,7 +3070,7 @@
                 'Content-Type': 'application/json',
                 'Prefer': 'return=representation'
               },
-              signal: AbortSignal.timeout(3000)
+              signal: AbortSignal.timeout(5000)
             };
             
             if (data) {
@@ -3006,7 +3106,7 @@
         Promise.race([fetchPromise, timeoutPromise])
           .then(resolve)
           .catch(error => {
-            console.warn('فشل الاتصال بالسيرفر، استخدام البيانات المحلية:', error.message);
+            console.warn('فشل الاتصال بالسيرفر:', error.message);
             resolve(null);
           });
       });
@@ -3015,72 +3115,106 @@
     // ✅ 3. تحميل البيانات من Supabase
     async function loadData() {
       if (!state.isOnline) {
-        console.log('لا يوجد اتصال بالإنترنت، استخدام البيانات المحلية');
-        useLocalData();
+        console.log('لا يوجد اتصال بالإنترنت');
+        showNotification('لا يوجد اتصال بالإنترنت', 'error');
+        soundSystem.playErrorSound();
         return;
       }
       
       try {
         state.isLoading = true;
         
-        await performSilentUpdate();
+        if (refreshBtn) {
+          const originalHTML = refreshBtn.innerHTML;
+          refreshBtn.innerHTML = '<span class="loading"></span> جاري التحميل...';
+          refreshBtn.disabled = true;
+        }
         
-        setTimeout(async () => {
-          try {
-            const data = await supabaseFetch('activities?select=*&order=created_at.desc&limit=20');
-            
-            if (data && data.length > 0) {
-              state.activities = data.map(item => ({
-                id: item.id.toString(),
-                type: item.type,
-                roomType: item.room_type,
-                title: item.title,
-                description: item.description,
-                startTime: item.start_time,
-                endTime: item.end_time,
-                link: item.link,
-                customMessage: item.custom_message,
-                date: new Date(item.created_at).toLocaleDateString('ar-AR'),
-                created_at: item.created_at
-              }));
-              
-              saveLocalBackup();
-              updateStats();
-              silentUIUpdate();
-            }
-          } catch (error) {
-            // لا تظهر رسائل للمستخدم
-          }
-        }, 1000);
+        const data = await supabaseFetch('activities?select=*&order=created_at.desc');
+        
+        if (data && data.length > 0) {
+          const newActivities = data.map(item => ({
+            id: item.id.toString(),
+            type: item.type,
+            roomType: item.room_type,
+            title: item.title,
+            description: item.description,
+            startTime: item.start_time,
+            endTime: item.end_time,
+            link: item.link,
+            customMessage: item.custom_message,
+            date: new Date(item.created_at).toLocaleDateString('ar-AR'),
+            created_at: item.created_at
+          }));
+          
+          state.activities = newActivities;
+          state.lastUpdateTime = new Date();
+          
+          updateStats();
+          renderActivitiesForLeader();
+          renderActivitiesForPartners();
+          
+          showNotification('تم تحديث البيانات بنجاح', 'success');
+          soundSystem.playSuccessSound();
+        } else if (data && data.length === 0) {
+          state.activities = [];
+          updateStats();
+          renderActivitiesForLeader();
+          renderActivitiesForPartners();
+        }
+        
+        // ✅ فحص المزامنة الإضافي
+        await checkAndSyncDeletions();
         
       } catch (error) {
-        useLocalData();
+        console.error('خطأ في loadData:', error);
+        showNotification('حدث خطأ في تحميل البيانات', 'error');
+        soundSystem.playErrorSound();
       } finally {
         state.isLoading = false;
+        
+        if (refreshBtn) {
+          refreshBtn.innerHTML = '<i class="fas fa-sync-alt"></i> تحديث';
+          refreshBtn.disabled = false;
+        }
       }
     }
-    
-    function useLocalData() {
-      const localData = localStorage.getItem('activities_backup');
-      if (localData) {
-        state.activities = JSON.parse(localData);
-        updateStats();
-        renderActivitiesForLeader();
-        renderActivitiesForPartners();
-        showNotification('تم تحميل البيانات من النسخة الاحتياطية', 'warning');
+
+    // ✅ فحص المزامنة التلقائي
+    async function checkAndSyncDeletions() {
+      try {
+        const data = await supabaseFetch('activities?select=id&order=created_at.desc');
+        
+        if (data) {
+          const serverIds = data.map(item => item.id.toString());
+          const localIds = state.activities.map(activity => activity.id);
+          
+          localIds.forEach(localId => {
+            if (!serverIds.includes(localId)) {
+              const index = state.activities.findIndex(a => a.id === localId);
+              if (index !== -1) {
+                state.activities.splice(index, 1);
+              }
+            }
+          });
+          
+          if (localIds.length !== serverIds.length) {
+            renderActivitiesForLeader();
+            renderActivitiesForPartners();
+            updateStats();
+          }
+        }
+      } catch (error) {
+        console.log('خطأ في فحص المزامنة:', error.message);
       }
-    }
-    
-    function saveLocalBackup() {
-      localStorage.setItem('activities_backup', JSON.stringify(state.activities));
     }
 
     // ✅ 4. إضافة نشاط جديد إلى Supabase
     async function addActivityToSupabase(activity) {
       return new Promise((resolve) => {
         if (!state.isOnline) {
-          showNotification('لا يوجد اتصال بالإنترنت، سيتم حفظ النشاط محلياً', 'warning');
-          addActivityLocally(activity);
+          showNotification('لا يوجد اتصال بالإنترنت', 'error');
+          soundSystem.playErrorSound();
           resolve(null);
           return;
         }
@@ -3098,6 +3232,7 @@
         renderActivitiesForLeader();
         
         showNotification('جاري إضافة النشاط...', 'success');
+        soundSystem.playAddSound();
         
         supabaseFetch('activities', 'POST', {
           type: activity.type,
@@ -3127,46 +3262,33 @@
                 created_at: savedActivity.created_at
               };
               
-              saveLocalBackup();
               renderActivitiesForLeader();
               updateStats();
+              renderActivitiesForPartners();
             }
             
             showNotification('تم إضافة النشاط بنجاح', 'success');
+            soundSystem.playSuccessSound();
             resolve(savedActivity);
           } else {
             resolve(null);
           }
         }).catch(error => {
           console.error('خطأ في addActivityToSupabase:', error);
-          showNotification('تم حفظ النشاط محلياً', 'warning');
-          resolve(tempActivity);
+          showNotification('حدث خطأ في إضافة النشاط', 'error');
+          soundSystem.playErrorSound();
+          resolve(null);
         });
       });
-    }
-    
-    function addActivityLocally(activity) {
-      const tempId = Date.now().toString();
-      const tempActivity = {
-        ...activity,
-        id: tempId,
-        date: new Date().toLocaleDateString('ar-AR'),
-        created_at: new Date().toISOString()
-      };
-      
-      state.activities.unshift(tempActivity);
-      saveLocalBackup();
-      updateStats();
-      renderActivitiesForLeader();
     }
 
     // ✅ 5. تحديث نشاط في Supabase
     async function updateActivityInSupabase(activityId, updates) {
       return new Promise((resolve) => {
         if (!state.isOnline) {
-          showNotification('لا يوجد اتصال، سيتم التحديث محلياً', 'warning');
-          updateActivityLocally(activityId, updates);
-          resolve(true);
+          showNotification('لا يوجد اتصال بالإنترنت', 'error');
+          soundSystem.playErrorSound();
+          resolve(false);
           return;
         }
         
@@ -3176,81 +3298,68 @@
           
           renderActivitiesForLeader();
           renderActivitiesForPartners();
-          
-          saveLocalBackup();
         }
         
         supabaseFetch(`activities?id=eq.${activityId}`, 'PATCH', {
           room_type: updates.roomType
         }).then(() => {
           showNotification('تم تحديث النشاط بنجاح', 'success');
+          soundSystem.playSuccessSound();
           resolve(true);
         }).catch(error => {
           console.error('خطأ في updateActivityInSupabase:', error);
-          showNotification('تم التحديث محلياً', 'warning');
-          resolve(true);
+          showNotification('حدث خطأ في تحديث النشاط', 'error');
+          soundSystem.playErrorSound();
+          resolve(false);
         });
       });
-    }
-    
-    function updateActivityLocally(activityId, updates) {
-      const activityIndex = state.activities.findIndex(a => a.id === activityId);
-      if (activityIndex !== -1) {
-        state.activities[activityIndex].roomType = updates.roomType;
-        saveLocalBackup();
-        renderActivitiesForLeader();
-        renderActivitiesForPartners();
-      }
     }
 
     // ✅ 6. حذف نشاط من Supabase
     async function deleteActivityFromSupabase(activityId) {
       return new Promise((resolve) => {
         if (!state.isOnline) {
-          showNotification('لا يوجد اتصال، سيتم الحذف محلياً', 'warning');
-          deleteActivityLocally(activityId);
-          resolve(true);
+          showNotification('لا يوجد اتصال بالإنترنت', 'error');
+          soundSystem.playErrorSound();
+          resolve(false);
           return;
         }
         
         const activityIndex = state.activities.findIndex(a => a.id === activityId);
-        let deletedActivity = null;
-        
         if (activityIndex !== -1) {
-          deletedActivity = state.activities[activityIndex];
           state.activities.splice(activityIndex, 1);
           
           updateStats();
           renderActivitiesForLeader();
           renderActivitiesForPartners();
-          
-          saveLocalBackup();
         }
         
         showNotification('جاري حذف النشاط...', 'success');
+        soundSystem.playDeleteSound();
         
         supabaseFetch(`activities?id=eq.${activityId}`, 'DELETE')
           .then(() => {
             showNotification('تم حذف النشاط بنجاح', 'success');
+            setTimeout(() => soundSystem.playSuccessSound(), 300);
+            
+            setTimeout(() => {
+              loadData();
+            }, 500);
+            
             resolve(true);
           })
           .catch(error => {
             console.error('خطأ في deleteActivityFromSupabase:', error);
-            showNotification('تم الحذف محلياً', 'warning');
-            resolve(true);
+            showNotification('حدث خطأ في حذف النشاط', 'error');
+            soundSystem.playErrorSound();
+            
+            setTimeout(() => {
+              loadData();
+            }, 500);
+            
+            resolve(false);
           });
       });
-    }
-    
-    function deleteActivityLocally(activityId) {
-      const activityIndex = state.activities.findIndex(a => a.id === activityId);
-      if (activityIndex !== -1) {
-        state.activities.splice(activityIndex, 1);
-        saveLocalBackup();
-        updateStats();
-        renderActivitiesForLeader();
-        renderActivitiesForPartners();
-      }
     }
 
     // ✅ 7. إضافة نشاط جديد
@@ -3266,6 +3375,7 @@
       
       if (!title || !startTimeInput || !link || !type) {
         showNotification('يرجى ملء الحقول الإلزامية: العنوان، وقت البدء، الرابط، ونوع النشاط', 'error');
+        soundSystem.playErrorSound();
         return;
       }
       
@@ -3277,6 +3387,7 @@
       
       if (startDateTime < currentTime) {
         showNotification('لا يمكن إضافة نشاط بوقت بدء في الماضي', 'error');
+        soundSystem.playErrorSound();
         return;
       }
       
@@ -3287,6 +3398,7 @@
         
         if (endDateTime <= startDateTime) {
           showNotification('وقت الانتهاء يجب أن يكون بعد وقت البدء', 'error');
+          soundSystem.playErrorSound();
           return;
         }
       }
@@ -3295,6 +3407,7 @@
       
       if (!isValidUrl(formattedLink)) {
         showNotification('الرجاء إدخال رابط صحيح', 'error');
+        soundSystem.playErrorSound();
         return;
       }
       
@@ -3321,6 +3434,7 @@
       } catch (error) {
         console.error('خطأ في addActivity:', error);
         showNotification('حدث خطأ في إضافة النشاط', 'error');
+        soundSystem.playErrorSound();
       } finally {
         if (addActivityBtn) {
           addActivityBtn.innerHTML = '<i class="fas fa-save"></i> إضافة النشاط';
@@ -3335,6 +3449,7 @@
       document.getElementById('activityDescription').value = '';
       document.getElementById('activityLink').value = '';
       document.getElementById('activityCustomMessage').value = '';
+      document.getElementById('startTime').value = '';
       document.getElementById('endTime').value = '';
       selectedActivityTypeText.textContent = 'اختر نوع النشاط';
       activityTypeInput.value = '';
@@ -3392,7 +3507,7 @@
             <button class="btn btn-accent" onclick="showCopyModal('${activity.id}')">
               <i class="fas fa-copy"></i> نسخ
             </button>
-            <button class="btn btn-danger" onclick="deleteActivity('${activity.id}')">
+            <button class="btn btn-danger" onclick="showDeleteConfirmation('${activity.id}')">
               <i class="fas fa-trash"></i> حذف
             </button>
           </div>
@@ -3479,7 +3594,7 @@
                       ${!canJoin ? 'title="الغرفة مغلقة، لا يمكن الانضمام حالياً"' : ''}>
                 <i class="fas fa-video"></i> ${canJoin ? 'انضم الآن' : 'مغلق'}
               </button>
-              <button class="btn btn-accent" onclick="showCopyModalForPartner('${activity.id}')">
+              <button class="btn btn-accent" onclick="showCopyModal('${activity.id}')">
                 <i class="fas fa-copy"></i> نسخ
               </button>
             </div>
@@ -3513,7 +3628,10 @@
           detailJoinButton.disabled = false;
         } else {
           detailJoinButton.className = 'btn btn-disabled';
-          detailJoinButton.onclick = () => showNotification('الغرفة مغلقة، لا يمكن الانضمام حالياً', 'error');
+          detailJoinButton.onclick = () => {
+            showNotification('الغرفة مغلقة، لا يمكن الانضمام حالياً', 'error');
+            soundSystem.playErrorSound();
+          };
           detailJoinButton.innerHTML = '<i class="fas fa-lock"></i> الغرفة مغلقة';
           detailJoinButton.disabled = true;
         }
@@ -3524,25 +3642,8 @@
 
     // ✅ 12. تحديث الأنشطة
     async function refreshActivities() {
-      if (state.isLoading || syncInProgress) return;
-      
-      try {
-        await forceFullSync();
-        
-        if (Math.random() > 0.5) {
-          const tempBtn = refreshBtn;
-          if (tempBtn) {
-            const original = tempBtn.innerHTML;
-            tempBtn.innerHTML = '<i class="fas fa-check"></i>';
-            setTimeout(() => {
-              tempBtn.innerHTML = original;
-            }, 300);
-          }
-        }
-        
-      } catch (error) {
-        // لا تظهر رسائل للمستخدم
-      }
+      await loadData();
+      showNotification('تم تحديث قائمة الأنشطة');
     }
 
     // ✅ 13. الحصول على نص النوع
@@ -3574,7 +3675,6 @@
       return `${day}/${month}/${year} ${hours}:${minutes}`;
     }
 
-    // ✅ 16. تنسيق التاريخ فقط
     function formatDate(dateTimeStr) {
       if (!dateTimeStr) return 'غير محدد';
       const date = new Date(dateTimeStr);
@@ -3584,7 +3684,6 @@
       return `${day}/${month}/${year}`;
     }
 
-    // ✅ 17. تنسيق الوقت فقط
     function formatTime(dateTimeStr) {
       if (!dateTimeStr) return 'غير محدد';
       const date = new Date(dateTimeStr);
@@ -3593,7 +3692,7 @@
       return `${hours}:${minutes}`;
     }
 
-    // ✅ 18. عرض الإشعارات
+    // ✅ 16. عرض الإشعارات
     function showNotification(message, type = 'success') {
       notification.style.backgroundColor = type === 'success' ? 'var(--success)' : 
                                          type === 'error' ? 'var(--accent)' : 
@@ -3613,7 +3712,7 @@
       }, 3000);
     }
 
-    // ✅ 19. تحويل الرابط إلى الشكل الصحيح
+    // ✅ 17. تحويل الرابط إلى الشكل الصحيح
     function formatMeetLink(input) {
       let link = input.trim();
       link = link.replace(/\s/g, '');
@@ -3637,7 +3736,7 @@
       return 'https://' + link;
     }
 
-    // ✅ 20. التحقق من صحة الرابط
+    // ✅ 18. التحقق من صحة الرابط
     function isValidUrl(url) {
       try {
         new URL(url);
@@ -3647,7 +3746,7 @@
       }
     }
 
-    // ✅ 21. تحديث الإحصائيات
+    // ✅ 19. تحديث الإحصائيات
     function updateStats() {
       const projects = state.activities.filter(a => a.type === 'project').length;
       const meetings = state.activities.filter(a => a.type === 'meeting').length;
@@ -3663,40 +3762,6 @@
     }
 
     // ✅ نافذة النسخ
-    function showCopyModalForPartner(activityId) {
-      const activity = state.activities.find(a => a.id === activityId);
-      if (!activity) return;
-      
-      if (copyMessagePreview) {
-        copyMessagePreview.textContent = activity.customMessage || '';
-      }
-      
-      if (copyLinkPreview) {
-        copyLinkPreview.textContent = activity.link;
-      }
-      
-      window.currentCopyActivityId = activityId;
-      window.currentCopyActivityLink = activity.link;
-      window.currentCopyActivityMessage = activity.customMessage || '';
-      
-      copyModal.classList.remove('hidden');
-      
-      setTimeout(() => {
-        const container = document.querySelector('.copy-modal-container');
-        const content = document.querySelector('.copy-modal-content');
-        const buttons = document.querySelector('.copy-buttons-container');
-        
-        if (container && content && buttons) {
-          container.style.display = 'flex';
-          container.style.flexDirection = 'column';
-          content.style.flex = '1';
-          content.style.overflowY = 'auto';
-          buttons.style.marginTop = 'auto';
-          buttons.style.flexShrink = '0';
-        }
-      }, 10);
-    }
-
     function showCopyModal(activityId) {
       const activity = state.activities.find(a => a.id === activityId);
       if (!activity) return;
@@ -3714,21 +3779,6 @@
       window.currentCopyActivityMessage = activity.customMessage || '';
       
       copyModal.classList.remove('hidden');
-      
-      setTimeout(() => {
-        const container = document.querySelector('.copy-modal-container');
-        const content = document.querySelector('.copy-modal-content');
-        const buttons = document.querySelector('.copy-buttons-container');
-        
-        if (container && content && buttons) {
-          container.style.display = 'flex';
-          container.style.flexDirection = 'column';
-          content.style.flex = '1';
-          content.style.overflowY = 'auto';
-          buttons.style.marginTop = 'auto';
-          buttons.style.flexShrink = '0';
-        }
-      }, 10);
     }
 
     function closeCopyModal() {
@@ -3743,6 +3793,7 @@
       
       if (!message || message.trim() === '') {
         showNotification('لا توجد رسالة مخصصة لهذا النشاط', 'warning');
+        soundSystem.playErrorSound();
         return;
       }
       
@@ -3754,6 +3805,7 @@
       
       if (!link) {
         showNotification('لا يوجد رابط للنشاط', 'error');
+        soundSystem.playErrorSound();
         return;
       }
       
@@ -3764,6 +3816,7 @@
       if (navigator.clipboard && window.isSecureContext) {
         navigator.clipboard.writeText(text).then(() => {
           showNotification(`تم نسخ ${title} بنجاح`, 'success');
+          soundSystem.playSuccessSound();
         }).catch(err => {
           fallbackCopyTextToClipboard(text, title);
         });
@@ -3789,17 +3842,66 @@
         const successful = document.execCommand('copy');
         if (successful) {
           showNotification(`تم نسخ ${title ? title : 'المحتوى'} بنجاح`, 'success');
+          soundSystem.playSuccessSound();
         } else {
           showNotification('فشل نسخ المحتوى، يرجى المحاولة مرة أخرى', 'error');
+          soundSystem.playErrorSound();
         }
       } catch (err) {
         showNotification('فشل نسخ المحتوى، يرجى المحاولة مرة أخرى', 'error');
+        soundSystem.playErrorSound();
       }
       
       document.body.removeChild(textArea);
     }
 
-    // ✅ دوال التنقل
+    // ✅ نافذة تأكيد الحذف
+    function showDeleteConfirmation(activityId) {
+      const activity = state.activities.find(a => a.id === activityId);
+      if (!activity) return;
+      
+      deleteActivityId = activityId;
+      deleteActivityData = activity;
+      
+      deleteConfirmMessage.textContent = `هل أنت متأكد من حذف النشاط "${activity.title}"؟`;
+      
+      const activityType = activityTypes.find(t => t.id === activity.type);
+      const typeName = activityType ? activityType.name : activity.type;
+      const roomTypeText = getRoomTypeText(activity.roomType);
+      
+      deleteActivityInfo.innerHTML = `
+        <h4><i class="fas fa-info-circle"></i> معلومات النشاط</h4>
+        <p><strong>النوع:</strong> ${typeName}</p>
+        <p><strong>نوع الغرفة:</strong> ${roomTypeText}</p>
+        <p><strong>وقت البدء:</strong> ${formatDateTime(activity.startTime)}</p>
+        ${activity.endTime ? `<p><strong>وقت الانتهاء:</strong> ${formatDateTime(activity.endTime)}</p>` : ''}
+        <p><strong>تاريخ الإضافة:</strong> ${activity.date}</p>
+      `;
+      
+      confirmDeleteBtn.onclick = () => executeDelete(activityId);
+      
+      confirmDeleteModal.classList.remove('hidden');
+      soundSystem.playErrorSound();
+    }
+
+    function closeDeleteModal() {
+      confirmDeleteModal.classList.add('hidden');
+      deleteActivityId = null;
+      deleteActivityData = null;
+    }
+
+    async function executeDelete(activityId) {
+      closeDeleteModal();
+      soundSystem.playDeleteSound();
+      
+      const success = await deleteActivityFromSupabase(activityId);
+      
+      if (success) {
+        showNotification('🗑️ تم حذف النشاط بنجاح', 'success');
+      }
+    }
+
+    // ✅ بقية الدوال الأساسية
     function showLeaderLogin() {
       mainScreen.classList.add('hidden');
       partnerSection.classList.add('hidden');
@@ -3809,28 +3911,19 @@
       
       document.getElementById('accessCode').value = '';
       codeStatus.classList.add('hidden');
-      
-      onPageChange();
     }
 
     function showPartnerSection() {
       mainScreen.classList.add('hidden');
       leaderSection.classList.add('hidden');
       partnerSection.classList.remove('hidden');
-      
-      setTimeout(() => {
-        renderActivitiesForPartners();
-      }, 100);
-      
-      onPageChange();
+      renderActivitiesForPartners();
     }
 
     function showMain() {
       mainScreen.classList.remove('hidden');
       leaderSection.classList.add('hidden');
       partnerSection.classList.add('hidden');
-      
-      onPageChange();
     }
 
     function checkAccessCode() {
@@ -3842,10 +3935,12 @@
         leaderDashboard.classList.remove('hidden');
         renderActivitiesForLeader();
         showNotification('تم الدخول بنجاح إلى لوحة القائد');
+        soundSystem.playSuccessSound();
       } else {
         codeStatus.textContent = "رمز الدخول غير صحيح، الرجاء المحاولة مرة أخرى";
         codeStatus.classList.add('alert-error');
         codeStatus.classList.remove('hidden');
+        soundSystem.playErrorSound();
       }
     }
 
@@ -3893,6 +3988,7 @@
         closeActivityTypeModal();
       } else {
         showNotification('يرجى اختيار نوع النشاط', 'error');
+        soundSystem.playErrorSound();
       }
     }
 
@@ -3979,21 +4075,19 @@
       if (activity) {
         const newRoomType = activity.roomType === 'open' ? 'closed' : 'open';
         
+        soundSystem.playUpdateSound();
+        activity.roomType = newRoomType;
+        
+        renderActivitiesForLeader();
+        renderActivitiesForPartners();
+        
+        const roomTypeText = getRoomTypeText(newRoomType);
+        showNotification(`تم تغيير نوع الغرفة إلى ${roomTypeText}`, 'success');
+        
         const success = await updateActivityInSupabase(activityId, { roomType: newRoomType });
         
         if (success) {
-          const roomTypeText = getRoomTypeText(newRoomType);
-          showNotification(`تم تغيير نوع الغرفة إلى ${roomTypeText}`);
-        }
-      }
-    }
-
-    async function deleteActivity(id) {
-      if (confirm('هل أنت متأكد من حذف هذا النشاط؟')) {
-        const success = await deleteActivityFromSupabase(id);
-        
-        if (success) {
-          showNotification('تم حذف النشاط بنجاح');
+          soundSystem.playSuccessSound();
         }
       }
     }
@@ -4001,6 +4095,7 @@
     function joinActivity(link, roomType) {
       if (roomType === 'closed') {
         showNotification('الغرفة مغلقة، لا يمكن الانضمام حالياً', 'error');
+        soundSystem.playErrorSound();
         return;
       }
       
@@ -4030,48 +4125,39 @@
       renderActivitiesForPartners();
     });
 
-    // ✅ إغلاق نافذة النسخ بالزر ESC
+    // ✅ إغلاق النوافذ بالأزرار
     document.addEventListener('keydown', function(event) {
       if (event.key === 'Escape') {
         closeCopyModal();
+        closeDeleteModal();
       }
     });
 
-    // ✅ إغلاق نافذة النسخ بالنقر خارجها
+    // ✅ إغلاق النوافذ بالنقر خارجها
     copyModal?.addEventListener('click', function(event) {
       if (event.target === this) {
         closeCopyModal();
       }
     });
 
+    confirmDeleteModal?.addEventListener('click', function(event) {
+      if (event.target === this) {
+        closeDeleteModal();
+      }
+    });
+
     // ✅ التهيئة الأولية
     document.addEventListener('DOMContentLoaded', function() {
-      console.log('بدء تشغيل التطبيق مع التحديث الخفي...');
+      console.log('بدء تشغيل التطبيق...');
       
       initConnectionMonitoring();
       loadData();
       
-      const startTimeInput = document.getElementById('startTime');
-      if (startTimeInput) {
-        const now = new Date();
-        now.setHours(now.getHours() + 1);
-        now.setMinutes(0, 0, 0);
-        
-        const year = now.getFullYear();
-        const month = String(now.getMonth() + 1).padStart(2, '0');
-        const day = String(now.getDate()).padStart(2, '0');
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        
-        startTimeInput.value = `${year}-${month}-${day}T${hours}:${minutes}`;
-      }
-      
       if (!state.isOnline) {
+        console.log('لا يوجد اتصال بالإنترنت عند بدء التشغيل');
         showOfflinePage();
       }
     });
   </script>
 </body>
 </html>
-    
-
