@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تحديث التطبيق</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(145deg, #000000 0%, #ff6b00 50%, #ffffff 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        /* طبقة خفيفة لتوحين الألوان */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at top right, rgba(255,255,255,0.1), rgba(0,0,0,0.2));
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 50px 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            animation: fadeIn 1s ease-out;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .icon {
+            margin-bottom: 30px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .icon svg {
+            width: 80px;
+            height: 80px;
+            fill: none;
+            stroke: #ff6b00;
+            stroke-width: 2;
+            filter: drop-shadow(0 5px 10px rgba(255, 107, 0, 0.3));
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: #333;
+            margin-bottom: 20px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            background: linear-gradient(135deg, #000000 0%, #ff6b00 80%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .main-message {
+            font-size: 1.3em;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .main-message p {
+            margin: 10px 0;
+        }
+
+        .main-message p:first-child {
+            color: #000000;
+            font-weight: 500;
+        }
+
+        .main-message p:last-child {
+            color: #ff6b00;
+            font-weight: 500;
+        }
+
+        .surprise {
+            font-size: 1.5em;
+            color: #000000;
+            font-weight: 700;
+            margin: 30px 0 20px;
+            position: relative;
+            display: inline-block;
+            padding: 0 20px;
+        }
+
+        .surprise::before,
+        .surprise::after {
+            content: "✨";
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .surprise::before {
+            left: -10px;
+            color: #ff6b00;
+        }
+
+        .surprise::after {
+            right: -10px;
+            color: #000000;
+        }
+
+        .loading-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin: 30px 0 20px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            background: linear-gradient(135deg, #ff6b00 0%, #000000 100%);
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out;
+        }
+
+        .dot:nth-child(1) {
+            animation-delay: -0.32s;
+        }
+
+        .dot:nth-child(2) {
+            animation-delay: -0.16s;
+        }
+
+        @keyframes bounce {
+            0%, 80%, 100% {
+                transform: scale(0);
+                opacity: 0.5;
+            }
+            40% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .footer {
+            margin-top: 40px;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .footer a {
+            color: #ff6b00;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px 20px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .main-message {
+                font-size: 1.1em;
+            }
+            
+            .surprise {
+                font-size: 1.3em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon">
+            <svg viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="45" stroke="currentColor" stroke-width="2" fill="none"/>
+                <path d="M30 50 L45 65 L70 35" stroke="currentColor" stroke-width="3" fill="none"/>
+            </svg>
+        </div>
+
+        <h1>نرتقي لكم دائماً</h1>
+
+        <div class="main-message">
+            <p>يجري الآن العمل على صيانة التطبيق وتحديثه</p>
+            <p>قريباً سنطل عليكم بتجربة أحدث وأكثر متعة وراحة</p>
+        </div>
+
+        <div class="loading-dots">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+        </div>
+
+        <div class="surprise">
+            ترقبوا المفاجأة
+        </div>
+
+        <div class="footer">
+            شكراً لصبركم <span style="color: #ff6b00;">❤️</span>
+        </div>
+    </div>
+</body>
+</html>
